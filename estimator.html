@@ -147,8 +147,8 @@
       top: 80px;
     }
     .quote-box {
-      background: var(--ink);
-      color: #fff;
+      background: #FDFAF6;
+      border: 1.5px solid #E8DDD0;
       border-radius: 10px;
       padding: 28px;
     }
@@ -156,52 +156,52 @@
       font-family: var(--font-display);
       font-weight: 400;
       font-size: 1.3rem;
-      color: #fff;
+      color: var(--ink);
       margin-bottom: 4px;
     }
-    .quote-box .sub { font-size: .78rem; color: rgba(255,255,255,.5); margin-bottom: 20px; }
+    .quote-box .sub { font-size: .78rem; color: var(--muted); margin-bottom: 20px; }
 
     .quote-items { min-height: 80px; margin-bottom: 20px; }
     .empty-state {
       text-align: center;
       padding: 28px 0;
-      color: rgba(255,255,255,.35);
+      color: #bbb;
       font-size: .82rem;
     }
     .quote-item {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 11px 0;
+      border-bottom: 1px solid #EDE5DA;
       gap: 12px;
     }
-    .qi-info .qi-name { font-size: .88rem; font-weight: 500; color: #fff; }
-    .qi-info .qi-detail { font-size: .74rem; color: rgba(255,255,255,.45); margin-top: 2px; }
+    .qi-info .qi-name { font-size: .88rem; font-weight: 600; color: var(--ink); }
+    .qi-info .qi-detail { font-size: .74rem; color: var(--muted); margin-top: 2px; }
     .qi-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .qi-price { font-size: .92rem; font-weight: 600; color: #E8C97A; }
+    .qi-price { font-size: .92rem; font-weight: 700; color: var(--terracotta); }
     .qi-remove {
       background: none; border: none; cursor: pointer;
-      color: rgba(255,255,255,.3); font-size: 1rem; line-height: 1;
+      color: #ccc; font-size: 1rem; line-height: 1;
       padding: 2px 4px; transition: color .18s;
     }
-    .qi-remove:hover { color: #ff7070; }
+    .qi-remove:hover { color: #e05c3a; }
 
     .quote-total {
-      background: rgba(255,255,255,.06);
+      background: var(--terracotta);
       border-radius: 6px;
-      padding: 14px 16px;
+      padding: 14px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
     }
-    .qt-label { font-size: .78rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .06em; }
-    .qt-amount { font-family: var(--font-display); font-size: 1.8rem; color: #E8C97A; }
+    .qt-label { font-size: .78rem; color: rgba(255,255,255,.8); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+    .qt-amount { font-family: var(--font-display); font-size: 1.8rem; color: #fff; }
 
     .quote-note {
       font-size: .73rem;
-      color: rgba(255,255,255,.35);
+      color: var(--muted);
       margin-bottom: 20px;
       line-height: 1.6;
     }
@@ -222,10 +222,10 @@
       display: flex; align-items: center; justify-content: center; gap: 8px;
       padding: 13px;
       background: transparent;
-      color: rgba(255,255,255,.7);
+      color: var(--muted);
       font-family: var(--font-body);
       font-size: .86rem; font-weight: 500;
-      border: 1px solid rgba(255,255,255,.15);
+      border: 1px solid #E8DDD0;
       border-radius: 6px; cursor: pointer; transition: border-color .18s, color .18s;
     }
     .btn-print:hover { border-color: rgba(255,255,255,.4); color: #fff; }
