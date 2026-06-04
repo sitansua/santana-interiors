@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estimator — Santana Interiors</title>
+  <meta name="description" content="Get a quick budget estimate for your modular kitchen, wardrobe, false ceiling and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── ESTIMATOR STYLES ── */
+    .estimator-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* Item selector */
+    .item-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .item-tab {
+      background: var(--cream-deep);
+      border: 1.5px solid var(--rule);
+      border-radius: 8px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .18s, background .18s;
+      font-family: var(--font-body);
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .item-tab .icon { font-size: 1.5rem; display: block; margin-bottom: 6px; }
+    .item-tab:hover { border-color: var(--terracotta); }
+    .item-tab.active { border-color: var(--terracotta); background: #fff7f5; color: var(--terracotta); }
+
+    /* Form panel */
+    .form-panel {
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 28px;
+    }
+    .form-panel h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .form-panel .sub {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .material-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .mat-btn {
+      border: 1.5px solid var(--rule);
+      border-radius: 6px;
+      padding: 12px 16px;
+      cursor: pointer;
+      text-align: center;
+      transition: all .18s;
+      background: var(--cream-deep);
+    }
+    .mat-btn .mat-name { font-size: .88rem; font-weight: 600; color: var(--ink); display: block; }
+    .mat-btn .mat-range { font-size: .75rem; color: var(--muted); }
+    .mat-btn:hover { border-color: var(--terracotta); }
+    .mat-btn.active { border-color: var(--terracotta); background: #fff7f5; }
+    .mat-btn.active .mat-name { color: var(--terracotta); }
+
+    .dim-row {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .dim-row.two { grid-template-columns: 1fr 1fr; }
+    .dim-row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+    .dim-group label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .dim-group input {
+      width: 100%;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: .95rem;
+      color: var(--ink);
+      background: var(--cream);
+      outline: none;
+      transition: border-color .18s;
+    }
+    .dim-group input:focus { border-color: var(--terracotta); background: #fff; }
+
+    .price-preview {
+      background: var(--cream-deep);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .price-preview .label { font-size: .8rem; color: var(--muted); }
+    .price-preview .amount { font-family: var(--font-display); font-size: 1.5rem; color: var(--terracotta); }
+
+    .btn-add {
+      width: 100%;
+      padding: 14px;
+      background: var(--ink);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: .88rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .18s;
+    }
+    .btn-add:hover { background: var(--terracotta); }
+
+    /* Quote summary */
+    .quote-panel {
+      position: sticky;
+      top: 80px;
+    }
+    .quote-box {
+      background: var(--ink);
+      color: #fff;
+      border-radius: 10px;
+      padding: 28px;
+    }
+    .quote-box h3 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .quote-box .sub { font-size: .78rem; color: rgba(255,255,255,.5); margin-bottom: 20px; }
+
+    .quote-items { min-height: 80px; margin-bottom: 20px; }
+    .empty-state {
+      text-align: center;
+      padding: 28px 0;
+      color: rgba(255,255,255,.35);
+      font-size: .82rem;
+    }
+    .quote-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      gap: 12px;
+    }
+    .qi-info .qi-name { font-size: .88rem; font-weight: 500; color: #fff; }
+    .qi-info .qi-detail { font-size: .74rem; color: rgba(255,255,255,.45); margin-top: 2px; }
+    .qi-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .qi-price { font-size: .92rem; font-weight: 600; color: #E8C97A; }
+    .qi-remove {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,.3); font-size: 1rem; line-height: 1;
+      padding: 2px 4px; transition: color .18s;
+    }
+    .qi-remove:hover { color: #ff7070; }
+
+    .quote-total {
+      background: rgba(255,255,255,.06);
+      border-radius: 6px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .qt-label { font-size: .78rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .06em; }
+    .qt-amount { font-family: var(--font-display); font-size: 1.8rem; color: #E8C97A; }
+
+    .quote-note {
+      font-size: .73rem;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .quote-actions { display: flex; flex-direction: column; gap: 10px; }
+    .btn-wa {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px;
+      background: #25D366;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: .86rem; font-weight: 600;
+      border: none; border-radius: 6px; cursor: pointer; transition: background .18s;
+      text-decoration: none;
+    }
+    .btn-wa:hover { background: #1ebe5a; }
+    .btn-print {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px;
+      background: transparent;
+      color: rgba(255,255,255,.7);
+      font-family: var(--font-body);
+      font-size: .86rem; font-weight: 500;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 6px; cursor: pointer; transition: border-color .18s, color .18s;
+    }
+    .btn-print:hover { border-color: rgba(255,255,255,.4); color: #fff; }
+
+    /* Note box */
+    .estimator-note {
+      background: var(--cream-deep);
+      border-left: 3px solid var(--terracotta);
+      border-radius: 0 6px 6px 0;
+      padding: 14px 18px;
+      margin-top: 24px;
+      font-size: .8rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .estimator-grid { grid-template-columns: 1fr; }
+      .quote-panel { position: static; }
+      .item-tabs { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .item-tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media print {
+      nav, .form-panel, .item-tabs, .estimator-note, .quote-actions, .site-footer { display: none !important; }
+      .estimator-grid { grid-template-columns: 1fr; }
+      .quote-box { color: #000; background: #fff; border: 1px solid #ccc; }
+      .quote-box h3, .qi-name, .qt-amount, .qi-price { color: #000 !important; }
+      .sub, .qi-detail, .qt-label, .quote-note { color: #666 !important; }
+      .quote-total { background: #f5f5f5; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">S</span>
+        <span class="brand-name">Santana<span> Interiors</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="estimator.html" class="active">Estimator</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">Book Consultation</a>
+      <button class="nav-toggle" aria-label="Menu"><span></span></button>
+    </div>
+    <div class="nav-mobile">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="estimator.html">Estimator</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span>Estimator</span></div>
+      <span class="eyebrow">Smart Estimator</span>
+      <h1 style="margin-top:18px;">Get a quick <em>budget estimate.</em></h1>
+      <p style="max-width:580px; margin-top:14px; color:var(--muted); font-size:1rem;">
+        Select items, enter dimensions, and choose a material tier. Add multiple items to build your full quote — then share it directly on WhatsApp.
+      </p>
+    </div>
+  </section>
+
+  <!-- ESTIMATOR -->
+  <section>
+    <div class="container">
+      <div class="estimator-grid">
+
+        <!-- LEFT: configurator -->
+        <div>
+          <!-- Item tabs -->
+          <div class="item-tabs" id="itemTabs">
+            <button class="item-tab active" data-item="wardrobe">
+              <span class="icon">🚪</span>Wardrobe
+            </button>
+            <button class="item-tab" data-item="kitchen">
+              <span class="icon">🍳</span>Kitchen
+            </button>
+            <button class="item-tab" data-item="ceiling">
+              <span class="icon">✨</span>False Ceiling
+            </button>
+            <button class="item-tab" data-item="tv">
+              <span class="icon">📺</span>TV Unit
+            </button>
+            <button class="item-tab" data-item="foyer">
+              <span class="icon">🚪</span>Foyer
+            </button>
+            <button class="item-tab" data-item="shoe">
+              <span class="icon">👟</span>Shoe Rack
+            </button>
+            <button class="item-tab" data-item="loft">
+              <span class="icon">📦</span>Loft
+            </button>
+          </div>
+
+          <!-- Form panel -->
+          <div class="form-panel">
+            <h3 id="panelTitle">Wardrobe</h3>
+            <p class="sub" id="panelSub">Sliding or hinged wardrobe with custom finishes</p>
+
+            <!-- Material -->
+            <div class="material-toggle">
+              <div class="mat-btn active" data-mat="standard">
+                <span class="mat-name">Standard</span>
+                <span class="mat-range" id="stdRange">₹900 / sq.ft</span>
+              </div>
+              <div class="mat-btn" data-mat="premium">
+                <span class="mat-name">Premium</span>
+                <span class="mat-range" id="premRange">₹1,400 / sq.ft</span>
+              </div>
+            </div>
+
+            <!-- Dimensions -->
+            <div class="dim-row two" id="dimFields">
+              <div class="dim-group">
+                <label>Width (ft)</label>
+                <input type="number" id="dimW" placeholder="e.g. 6" min="0" step="0.5" />
+              </div>
+              <div class="dim-group">
+                <label id="dimHLabel">Height (ft)</label>
+                <input type="number" id="dimH" placeholder="e.g. 8" min="0" step="0.5" />
+              </div>
+            </div>
+
+            <!-- Price preview -->
+            <div class="price-preview">
+              <span class="label">Estimated cost</span>
+              <span class="amount" id="livePrice">₹ —</span>
+            </div>
+
+            <button class="btn-add" id="addBtn">+ Add to Quote</button>
+
+            <div class="estimator-note">
+              <strong>Note:</strong> These are indicative estimates based on standard Bangalore market rates. Final pricing depends on exact specifications, site conditions, and material selection. Book a free consultation for an accurate quote.
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: quote summary -->
+        <div class="quote-panel">
+          <div class="quote-box">
+            <h3>Your Quote</h3>
+            <p class="sub">Items added below</p>
+
+            <div class="quote-items" id="quoteItems">
+              <div class="empty-state" id="emptyState">No items added yet.<br/>Configure and add items on the left.</div>
+            </div>
+
+            <div class="quote-total">
+              <span class="qt-label">Total Estimate</span>
+              <span class="qt-amount" id="totalAmount">₹0</span>
+            </div>
+
+            <p class="quote-note">* Prices are estimates only. GST, site prep, and installation charges may apply. Valid for 30 days from today.</p>
+
+            <div class="quote-actions">
+              <a href="#" class="btn-wa" id="waBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.558 4.112 1.533 5.832L.057 23.522a.5.5 0 0 0 .614.634l5.825-1.527A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 0 1-5.047-1.381l-.362-.215-3.754.984.999-3.648-.237-.374A9.869 9.869 0 0 1 2.106 12C2.106 6.54 6.54 2.106 12 2.106S21.894 6.54 21.894 12 17.46 21.894 12 21.894z"/></svg>
+                Send via WhatsApp
+              </a>
+              <button class="btn-print" onclick="window.print()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Print / Save as PDF
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand">
+            <span class="brand-mark">S</span>
+            <span class="brand-name">Santana<span style="color:var(--terracotta);font-style:italic;"> Interiors</span></span>
+          </div>
+          <p>An interior design studio crafting modern, livable homes across India.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Studio</h5>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="portfolio.html">Portfolio</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Services</h5>
+          <ul>
+            <li><a href="services.html#kitchens">Modular Kitchens</a></li>
+            <li><a href="services.html#wardrobes">Wardrobes</a></li>
+            <li><a href="services.html#ceilings">False Ceilings</a></li>
+            <li><a href="services.html#tv-units">TV Units</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Get in touch</h5>
+          <p><a href="mailto:int.santana@gmail.com">int.santana@gmail.com</a><br/><a href="tel:+918095619444">+91 80956 19444</a></p>
+          <p style="margin-top:14px;">489 C.M.H Road, Indiranagar 1st Stage,<br/>Bangalore 560038</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Santana Interiors. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── PRICING DATA ──
+    const ITEMS = {
+      wardrobe: {
+        label: 'Wardrobe',
+        sub: 'Sliding or hinged wardrobe with custom finishes',
+        dims: ['Width (ft)', 'Height (ft)'],
+        keys: ['w', 'h'],
+        calc: (d, rate) => d.w * d.h * rate,
+        unit: 'sq.ft',
+        std: 900, prem: 1400
+      },
+      kitchen: {
+        label: 'Modular Kitchen',
+        sub: 'L-shaped, straight or parallel kitchen layout',
+        dims: ['Length (ft)', 'Width (ft)'],
+        keys: ['w', 'h'],
+        calc: (d, rate) => d.w * d.h * rate,
+        unit: 'sq.ft',
+        std: 1100, prem: 1750
+      },
+      ceiling: {
+        label: 'False Ceiling',
+        sub: 'Gypsum false ceiling with lighting provision',
+        dims: ['Length (ft)', 'Width (ft)'],
+        keys: ['w', 'h'],
+        calc: (d, rate) => d.w * d.h * rate,
+        unit: 'sq.ft',
+        std: 100, prem: 175
+      },
+      tv: {
+        label: 'TV Unit',
+        sub: 'Custom TV console with storage and back panel',
+        dims: ['Width (ft)', 'Height (ft)'],
+        keys: ['w', 'h'],
+        calc: (d, rate) => d.w * d.h * rate,
+        unit: 'sq.ft',
+        std: 850, prem: 1350
+      },
+      foyer: {
+        label: 'Foyer Design',
+        sub: 'Entrance unit with storage and decorative elements',
+        dims: ['Width (ft)', 'Height (ft)'],
+        keys: ['w', 'h'],
+        calc: (d, rate) => d.w * d.h * rate,
+        unit: 'sq.ft',
+        std: 900, prem: 1400
+      },
+      shoe: {
+        label: 'Shoe Rack',
+        sub: 'Shoe storage unit with ventilation design',
+        dims: ['Width (ft)', 'Height (ft)'],
+        keys: ['w', 'h'],
+        calc: (d, rate) => d.w * d.h * rate,
+        unit: 'sq.ft',
+        std: 650, prem: 950
+      },
+      loft: {
+        label: 'Loft',
+        sub: 'Overhead storage loft with shutters',
+        dims: ['Width (ft)', 'Depth (ft)'],
+        keys: ['w', 'h'],
+        calc: (d, rate) => d.w * d.h * rate,
+        unit: 'sq.ft',
+        std: 550, prem: 850
+      }
+    };
+
+    let currentItem = 'wardrobe';
+    let currentMat = 'standard';
+    let quoteItems = [];
+
+    const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+    // ── INIT ──
+    function loadItem(key) {
+      currentItem = key;
+      const cfg = ITEMS[key];
+      document.getElementById('panelTitle').textContent = cfg.label;
+      document.getElementById('panelSub').textContent = cfg.sub;
+      document.getElementById('stdRange').textContent = fmt(cfg.std) + ' / ' + cfg.unit;
+      document.getElementById('premRange').textContent = fmt(cfg.prem) + ' / ' + cfg.unit;
+
+      // Update dim labels
+      const dimFields = document.getElementById('dimFields');
+      dimFields.innerHTML = cfg.dims.map((lbl, i) => `
+        <div class="dim-group">
+          <label>${lbl}</label>
+          <input type="number" id="dim${i === 0 ? 'W' : 'H'}" placeholder="e.g. ${i === 0 ? 6 : 8}" min="0" step="0.5" oninput="updatePreview()" />
+        </div>
+      `).join('');
+
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const cfg = ITEMS[currentItem];
+      const rate = currentMat === 'standard' ? cfg.std : cfg.prem;
+      const wEl = document.getElementById('dimW');
+      const hEl = document.getElementById('dimH');
+      const w = parseFloat(wEl?.value) || 0;
+      const h = parseFloat(hEl?.value) || 0;
+      const cost = cfg.calc({ w, h }, rate);
+      document.getElementById('livePrice').textContent = (w && h) ? fmt(cost) : '₹ —';
+    }
+
+    // ── ITEM TABS ──
+    document.getElementById('itemTabs').addEventListener('click', e => {
+      const btn = e.target.closest('.item-tab');
+      if (!btn) return;
+      document.querySelectorAll('.item-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadItem(btn.dataset.item);
+    });
+
+    // ── MATERIAL ──
+    document.querySelectorAll('.mat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMat = btn.dataset.mat;
+        const cfg = ITEMS[currentItem];
+        document.getElementById('stdRange').textContent = fmt(cfg.std) + ' / ' + cfg.unit;
+        document.getElementById('premRange').textContent = fmt(cfg.prem) + ' / ' + cfg.unit;
+        updatePreview();
+      });
+    });
+
+    // ── ADD TO QUOTE ──
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const cfg = ITEMS[currentItem];
+      const rate = currentMat === 'standard' ? cfg.std : cfg.prem;
+      const wEl = document.getElementById('dimW');
+      const hEl = document.getElementById('dimH');
+      const w = parseFloat(wEl?.value) || 0;
+      const h = parseFloat(hEl?.value) || 0;
+
+      if (!w || !h) {
+        wEl.style.borderColor = '#e05c3a';
+        hEl && (hEl.style.borderColor = '#e05c3a');
+        setTimeout(() => {
+          wEl.style.borderColor = '';
+          hEl && (hEl.style.borderColor = '');
+        }, 1500);
+        return;
+      }
+
+      const cost = cfg.calc({ w, h }, rate);
+      const id = Date.now();
+      quoteItems.push({
+        id, label: cfg.label,
+        detail: `${w} × ${h} ft · ${currentMat.charAt(0).toUpperCase() + currentMat.slice(1)}`,
+        cost
+      });
+
+      renderQuote();
+      // Reset dims
+      if (wEl) wEl.value = '';
+      if (hEl) hEl.value = '';
+      updatePreview();
+    });
+
+    // ── RENDER QUOTE ──
+    function renderQuote() {
+      const container = document.getElementById('quoteItems');
+      const empty = document.getElementById('emptyState');
+
+      if (quoteItems.length === 0) {
+        container.innerHTML = '<div class="empty-state" id="emptyState">No items added yet.<br/>Configure and add items on the left.</div>';
+        document.getElementById('totalAmount').textContent = '₹0';
+        updateWA();
+        return;
+      }
+
+      container.innerHTML = quoteItems.map(item => `
+        <div class="quote-item">
+          <div class="qi-info">
+            <div class="qi-name">${item.label}</div>
+            <div class="qi-detail">${item.detail}</div>
+          </div>
+          <div class="qi-right">
+            <span class="qi-price">${fmt(item.cost)}</span>
+            <button class="qi-remove" onclick="removeItem(${item.id})" title="Remove">✕</button>
+          </div>
+        </div>
+      `).join('');
+
+      const total = quoteItems.reduce((s, i) => s + i.cost, 0);
+      document.getElementById('totalAmount').textContent = fmt(total);
+      updateWA(total);
+    }
+
+    function removeItem(id) {
+      quoteItems = quoteItems.filter(i => i.id !== id);
+      renderQuote();
+    }
+
+    function updateWA(total = 0) {
+      if (quoteItems.length === 0) {
+        document.getElementById('waBtn').href = 'https://wa.me/918095619444?text=Hi%20Santana%20Interiors%2C%20I%20am%20interested%20in%20your%20services!';
+        return;
+      }
+      const lines = quoteItems.map(i => `• ${i.label} (${i.detail}): ${fmt(i.cost)}`).join('%0A');
+      const msg = `Hi Santana Interiors!%0A%0AHere is my estimate:%0A%0A${lines}%0A%0A*Total: ${fmt(total)}*%0A%0APlease confirm availability and next steps.`;
+      document.getElementById('waBtn').href = `https://wa.me/918095619444?text=${msg}`;
+    }
+
+    // ── INIT ──
+    loadItem('wardrobe');
+  </script>
+
+</body>
+</html>
